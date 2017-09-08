@@ -13,7 +13,6 @@ import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import Data.Attoparsec.Text
 import Grammar.Types
-import System.FilePath
 
 ifFailThen :: (Alternative m, Monad m) => m a -> m b -> m b
 ifFailThen m1 m2 = do

@@ -3,11 +3,9 @@
 
 module Main where
 
-import Control.Concurrent
 import Control.Monad
 import Data.Text (Text)
 import qualified Data.Text as T
-import qualified Data.Text.IO as T
 import qualified Grammar.Parse as Parse
 import Grammar.Run
 import Twitter.Bot
@@ -24,12 +22,15 @@ getSnarxivId = do
   paperId <- fmap (concatMap show) (replicateM 5 (randomRIO (0 :: Int, 9)))
   return (T.pack (dateId ++ "." ++ paperId))
 
-main :: IO ()
-main = do
-  [grammarFile] <- getArgs
+getTweet :: FilePath -> IO Text
+getTweet grammarFile = do
   g <- Parse.grammarFromFile grammarFile
   authors <- fmap (T.dropEnd 1) (runClean g "authors")
   title   <- runTitle g "title"
-  id <- getSnarxivId
-  let paper = "[" <> id <> "] " <> authors <> ": " <> title
-  tweet paper
+  snarxivId <- getSnarxivId
+  return ("[" <> snarxivId <> "] " <> authors <> ": " <> title)
+
+main :: IO ()
+main = do
+  [grammarFile] <- getArgs
+  getTweet grammarFile >>= tweet

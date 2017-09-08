@@ -12,7 +12,6 @@ import qualified Data.ByteString.Char8 as S8
 import qualified Data.CaseInsensitive as CI
 import qualified Data.Map as M
 import qualified Data.Text as T
-import Data.Monoid
 import Data.Text (Text)
 import Network.HTTP.Conduit
 import qualified Network.URI as URI
@@ -59,7 +58,9 @@ safeTruncate :: Int -> Text -> Text
 safeTruncate n t =
   if T.length t <= n
   then t
-  else T.take (n-3) t <> "..."
+  else T.take (n-1) t `T.snoc` ellipsis 
+  where
+    ellipsis = '\8230'
 
 tweet :: Text -> IO ()
 tweet status = do
