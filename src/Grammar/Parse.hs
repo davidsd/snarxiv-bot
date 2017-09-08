@@ -1,18 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections     #-}
 
 module Grammar.Parse where
 
-import Control.Monad
-import qualified Data.HashMap.Strict as HM
-import qualified Data.Vector as V
-import Control.Applicative
-import Prelude hiding (takeWhile)
-import Data.Text (Text)
-import qualified Data.Text as T
-import qualified Data.Text.IO as T
-import Data.Attoparsec.Text
-import Grammar.Types
+import           Control.Applicative
+import           Control.Monad
+import           Data.Attoparsec.Text
+import qualified Data.HashMap.Strict  as HM
+import           Data.Text            (Text)
+import qualified Data.Text            as T
+import qualified Data.Text.IO         as T
+import qualified Data.Vector          as V
+import           Grammar.Types
+import           Prelude              hiding (takeWhile)
 
 ifFailThen :: (Alternative m, Monad m) => m a -> m b -> m b
 ifFailThen m1 m2 = do
@@ -27,7 +27,7 @@ takeEscapedWhile escapeChar p = scan False watch
     watch False c     | not (p c)       = Nothing
     watch isEscaped c | c == escapeChar = Just (not isEscaped)
     watch isEscaped _                   = Just isEscaped
-    
+
 takeEscapedWhile1 :: Char -> (Char -> Bool) -> Parser Text
 takeEscapedWhile1 e p = mfilter (/= "") (takeEscapedWhile e p)
 
@@ -54,7 +54,7 @@ phrase = fmap stripPhrase
   where
     emptyPhrase = mfilter (== '|') peekChar' *> pure []
     stripPhrase = filter (/= Literal "") . stripStart . stripEnd
-    stripStart cs = case cs of 
+    stripStart cs = case cs of
       (Literal l : cs') -> Literal (T.stripStart l) : cs'
       cs' -> cs'
     stripEnd cs = case reverse cs of
@@ -82,4 +82,4 @@ grammarFromFile f = do
   case parseOnly grammar txt of
     Right g -> return g
     Left e  -> error (show e)
-    
+

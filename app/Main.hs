@@ -1,23 +1,23 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Main where
 
-import Control.Monad
-import Data.Text (Text)
-import qualified Data.Text as T
-import qualified Grammar.Parse as Parse
-import Grammar.Run
-import Twitter.Bot
-import Data.Time.Clock
-import Data.Time.Format
-import System.Random
-import Data.Monoid
-import System.Environment
+import           Control.Monad
+import           Data.Monoid
+import           Data.Text          (Text)
+import qualified Data.Text          as T
+import           Data.Time.Clock
+import           Data.Time.Format
+import qualified Grammar.Parse      as Parse
+import           Grammar.Run
+import           System.Environment
+import           System.Random
+import           Twitter.Bot
 
 getSnarxivId :: IO Text
 getSnarxivId = do
-  time <- getCurrentTime  
+  time <- getCurrentTime
   let dateId = formatTime defaultTimeLocale "%y%m" time
   paperId <- fmap (concatMap show) (replicateM 5 (randomRIO (0 :: Int, 9)))
   return (T.pack (dateId ++ "." ++ paperId))

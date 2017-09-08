@@ -1,21 +1,21 @@
+{-# LANGUAGE ConstraintKinds   #-}
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
 
 module Twitter.Bot where
 
-import Web.Twitter.Conduit
+import           Web.Twitter.Conduit
 
-import Control.Applicative
-import Control.Lens
+import           Control.Applicative
+import           Control.Lens
 import qualified Data.ByteString.Char8 as S8
-import qualified Data.CaseInsensitive as CI
-import qualified Data.Map as M
-import qualified Data.Text as T
-import Data.Text (Text)
-import Network.HTTP.Conduit
-import qualified Network.URI as URI
-import System.Environment
+import qualified Data.CaseInsensitive  as CI
+import qualified Data.Map              as M
+import           Data.Text             (Text)
+import qualified Data.Text             as T
+import           Network.HTTP.Conduit
+import qualified Network.URI           as URI
+import           System.Environment
 
 getOAuthTokens :: IO (OAuth, Credential)
 getOAuthTokens = do
@@ -58,7 +58,7 @@ safeTruncate :: Int -> Text -> Text
 safeTruncate n t =
   if T.length t <= n
   then t
-  else T.take (n-1) t `T.snoc` ellipsis 
+  else T.take (n-1) t `T.snoc` ellipsis
   where
     ellipsis = '\8230'
 

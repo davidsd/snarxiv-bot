@@ -1,18 +1,18 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Grammar.Run where
 
-import Data.Char
-import Control.Monad
-import Grammar.Types
-import Data.Text (Text)
-import Data.Text.Titlecase
-import qualified Data.Vector as V
-import Data.Vector (Vector)
+import           Control.Monad
+import           Data.Char
 import qualified Data.HashMap.Strict as HM
-import qualified Data.Text as T
-import System.Random
+import           Data.Text           (Text)
+import qualified Data.Text           as T
+import           Data.Text.Titlecase
+import           Data.Vector         (Vector)
+import qualified Data.Vector         as V
+import           Grammar.Types
+import           System.Random
 
 
 randomElt :: Vector a -> IO a
@@ -36,13 +36,13 @@ cleanText =
                 , T.replace " ;" ";"
                 , T.replace " :" ":"
                 , capitalizeSentences
-                ]) 
+                ])
 
 sentences :: Text -> [Text]
-sentences = filter (/= "") . map T.strip . T.splitOn ". " . flip T.snoc ' '
+sentences = filter (/= "") . map T.strip . T.splitOn ". " . (`T.snoc` ' ')
 
 unSentences :: [Text] -> Text
-unSentences = T.unwords . map (flip T.snoc '.')
+unSentences = T.unwords . map (`T.snoc` '.')
 
 capitalize :: Text -> Text
 capitalize t = case T.uncons t of
@@ -52,7 +52,7 @@ capitalize t = case T.uncons t of
 capitalizeSentences :: Text -> Text
 capitalizeSentences = unSentences . map capitalize . sentences
 
-runClean :: Grammar -> Text -> IO Text     
+runClean :: Grammar -> Text -> IO Text
 runClean g = fmap cleanText . run g
 
 runTitle :: Grammar -> Text -> IO Text
