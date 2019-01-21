@@ -66,6 +66,6 @@ tweet :: Text -> IO ()
 tweet status = do
   twInfo <- getTWInfoFromEnv
   mgr <- newManager tlsManagerSettings
-  let status' = safeTruncate 140 status
+  let status' = safeTruncate 280 status
   res <- call twInfo mgr $ update status'
   print res
